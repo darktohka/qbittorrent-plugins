@@ -1,4 +1,4 @@
-#VERSION: 1.1
+#VERSION: 1.2
 #AUTHORS: Derzsi Dániel (daniel@tohka.us)
 #
 # Redistribution and use in source and binary forms, with or without
@@ -71,7 +71,7 @@ class ncore(object):
 
     def sign_in(self, query=''):
         # Check if we have set credentials
-        if self.username == 'your_username' and self.password == 'your_password':
+        if self.username == 'your_username' or self.password == 'your_password':
             self.handle_error('You have not updated your credentials before installing the plugin', query)
             return False
 
@@ -101,10 +101,11 @@ class ncore(object):
 
     class NCoreParser(HTMLParser):
 
-        def __init__(self, results, url):
+        def __init__(self, results, url, count=-1):
             HTMLParser.__init__(self)
             self.results = results
             self.url = url
+            self.count = count
             self.key = None
             self.nextData = None
             self.torrent = None
@@ -129,7 +130,14 @@ class ncore(object):
                 link = attrs.get('href')
 
                 if 'title' in attrs:
-                    self.torrent['name'] = attrs['title']
+                    name = attrs['title']
+
+                    # In case the torrents have to be put into order
+                    if self.count > 0:
+                        name = '{}. {}'.format(self.count, name)
+                        self.count += 1
+
+                    self.torrent['name'] = name
                     self.torrent['desc_link'] = self.url + '/' + link
                     self.torrent['link'] = self.url + '/' + \
                         link.replace('details', 'download') + \
@@ -159,19 +167,31 @@ class ncore(object):
         if not self.sign_in(what):
             return
 
+        what = what.strip()
         page = 1
+        count = 1
+        category = self.supported_categories[cat]
 
         while page <= self.MAX_PAGE_NUMBER:
             results = []
-            url = '{}/torrents.php?miszerint=seeders&hogyan=DESC&tipus=kivalasztottak_kozott&mire={}&kivalasztott_tipus={}&oldal={}'.format(
-                self.url, what, self.supported_categories[cat], page)
+
+            if what == '.':
+                url = '{}/torrents.php?miszerint=fid&hogyan=DESC&tipus=kivalasztottak_kozott&kivalasztott_tipus={}&oldal={}'.format(
+                    self.url, category, page)
+            else:
+                # Disable sorting
+                url = '{}/torrents.php?miszerint=seeders&hogyan=DESC&tipus=kivalasztottak_kozott&mire={}&kivalasztott_tipus={}&oldal={}'.format(
+                    self.url, what, category, page)
+                count = -1
 
             request = self.opener.open(url)
             data = request.read().decode('utf-8')
 
-            parser = self.NCoreParser(results, self.url)
+            parser = self.NCoreParser(results, self.url, count)
             parser.feed(data)
             parser.close()
+
+            count = parser.count
 
             if not results:
                 break

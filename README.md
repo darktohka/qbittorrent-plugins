@@ -19,6 +19,10 @@ It requires an active nCore account, which is only achievable through an invitat
 * Press the button labeled as `Local file` and choose the **ncore.py** plugin you've completed with your username and password.
 * Your plugin should now be installed! Feel free to switch between search categories at any time.
 
+# Sorting by newest
+
+By default, this plugin will search nCore using keywords. If you want to list the newest torrents, choose your category and simply search for a dot: `.`
+
 # Caveats
 
 Attempting to log into nCore with an invalid username or password will trigger nCore's Google Captcha system. After logging in with invalid credentials, no further attempts will be possible until the captcha system deactivates. This takes around 5 minutes after each attempt.
