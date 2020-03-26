@@ -10,7 +10,7 @@ It requires an active nCore account, which is only achievable through an invitat
 
 # Installation
 
-* First, download the **ncore.py** plugin from [here](https://raw.githubusercontent.com/darktohka/qbittorrent-plugins/master/ncore.py).
+* First, download the **ncore.py** plugin from [here](https://raw.githubusercontent.com/darktohka/qbittorrent-plugins/master/ncore.py). Right click on the script and use your browser's **Save as...** feature.
 * Open the **ncore.py** file for editing using a text editor of your choice, such as Notepad++.
 * Look for the line containing **EDIT YOUR CREDENTIALS HERE**, usually on line 50.
 * Introduce your nCore username and password on the following two lines, respectively. Replace `your_username` and `your_password` with the correct values.
