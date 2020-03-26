@@ -58,8 +58,16 @@ class ncore(object):
     session_cookie = 'PHPSESSID'
     url = 'https://ncore.cc'
     name = 'nCore'
-    supported_categories = {'all': 'all_own', 'movies': 'osszes_film', 'tv': 'osszes_sorozat', 'music': 'osszes_zene',
-                            'games': 'osszes_jatek', 'software': 'osszes_program', 'pictures': 'osszes_xxx', 'books': 'osszes_konyv'}
+
+    supported_categories = {
+        'all': 'xvid_hun,xvid,dvd_hun,dvd,dvd9_hun,dvd9,hd_hun,hd,xvidser_hun,xvidser,dvdser_hun,dvdser,hdser_hun,hdser,mp3_hun,mp3,lossless_hun,lossless,clip,game_iso,game_rip,console,iso,misc,mobil,ebook_hun,ebook,xxx_xvid,xxx_dvd,xxx_imageset,xxx_hd',
+        'movies': 'xvid_hun,xvid,dvd_hun,dvd,dvd9_hun,dvd9,hd_hun,hd',
+        'tv': 'xvidser_hun,xvidser,dvdser_hun,dvdser,hdser_hun,hdser',
+        'music': 'mp3_hun,mp3,lossless_hun,lossless,clip',
+        'games': 'game_iso,game_rip,console',
+        'software': 'iso,misc,mobil',
+        'books': 'ebook_hun,ebook'
+    }
 
     def sign_in(self, query=''):
         # Check if we have set credentials
@@ -155,7 +163,7 @@ class ncore(object):
 
         while page <= self.MAX_PAGE_NUMBER:
             results = []
-            url = '{}/torrents.php?miszerint=seeders&hogyan=DESC&mire={}&tipus={}&oldal={}'.format(
+            url = '{}/torrents.php?miszerint=seeders&hogyan=DESC&tipus=kivalasztottak_kozott&mire={}&kivalasztott_tipus={}&oldal={}'.format(
                 self.url, what, self.supported_categories[cat], page)
 
             request = self.opener.open(url)
