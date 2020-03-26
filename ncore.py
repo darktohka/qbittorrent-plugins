@@ -1,4 +1,4 @@
-#VERSION: 1.0
+#VERSION: 1.1
 #AUTHORS: Derzsi Dániel (daniel@tohka.us)
 #
 # Redistribution and use in source and binary forms, with or without
@@ -86,7 +86,7 @@ class ncore(object):
         login_page = url_cookie.read().decode('utf-8')
 
         if 'login.php' in login_page:
-            self.handle_error('Could not log in. Your credentials are invalid', query)
+            self.handle_error('Could not log in. Your credentials are invalid! Please wait 5 minutes between attempts', query)
             return False
 
         return True
@@ -153,7 +153,7 @@ class ncore(object):
 
         page = 1
 
-        while page < self.MAX_PAGE_NUMBER:
+        while page <= self.MAX_PAGE_NUMBER:
             results = []
             url = '{}/torrents.php?miszerint=seeders&hogyan=DESC&mire={}&tipus={}&oldal={}'.format(
                 self.url, what, self.supported_categories[cat], page)
