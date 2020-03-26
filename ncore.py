@@ -179,6 +179,6 @@ class ncore(object):
             'leech': 0,
             'engine_url': self.url,
             'link': 'https://ncore.cc',
-            'desc_link': 'https://ncore.cc',
+            'desc_link': 'https://github.com/darktohka/qbittorrent-plugins/blob/master/README.md',
             'name': "nCore error: {}. Please edit file: '{}' to set your username and password. Your search was: '{}'".format(error, current_file, unquote(search_query))
         })
