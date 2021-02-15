@@ -56,7 +56,7 @@ class ncore(object):
     login_data = {'nev': username, 'pass': password,
                   'set_lang': 'hu', 'submitted': '1'}
     session_cookie = 'PHPSESSID'
-    url = 'https://ncore.cc'
+    url = 'https://ncore.pro'
     name = 'nCore'
 
     supported_categories = {
@@ -206,7 +206,7 @@ class ncore(object):
             'size': '0',
             'leech': 0,
             'engine_url': self.url,
-            'link': 'https://ncore.cc',
+            'link': 'https://ncore.pro',
             'desc_link': 'https://github.com/darktohka/qbittorrent-plugins/blob/master/README.md',
             'name': "nCore error: {}. Please edit file: '{}' to set your username and password. Your search was: '{}'".format(error, current_file, unquote(search_query))
         })
