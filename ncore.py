@@ -1,4 +1,4 @@
-#VERSION: 1.2
+#VERSION: 1.3
 #AUTHORS: Derzsi Dániel (daniel@tohka.us)
 #
 # Redistribution and use in source and binary forms, with or without
