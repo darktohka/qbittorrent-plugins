@@ -1,5 +1,5 @@
-#VERSION: 1.3
-#AUTHORS: Derzsi Dániel (daniel@tohka.us)
+# VERSION: 1.3
+# AUTHORS: Derzsi Dániel (daniel@tohka.us)
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -39,22 +39,30 @@ except ImportError:
     from html.parser import HTMLParser
 
 try:
-    from http.cookiejar import CookieJar
+    from http.cookiejar import CookieJar, Cookie
 except ImportError:
     from cookielib import CookieJar
 
 from novaprinter import prettyPrinter
 import os
 
+
 class ncore(object):
     # EDIT YOUR CREDENTIALS HERE
     username = 'your_username'
     password = 'your_password'
+
+    passhash = 'should leave empty if dont know'
+    twofactorcode = 'enter_code'
+
+    cookie_path = 'cookies.txt'
+    allowed_cookies = ['nick', 'pass', 'stilus', 'nyelv']
+
     MAX_PAGE_NUMBER = 10
 
     # Internal values
-    login_data = {'nev': username, 'pass': password,
-                  'set_lang': 'hu', 'submitted': '1'}
+    login_data = {'nev': username, 'pass': password, '2factor': twofactorcode,
+                  'set_lang': 'hu', 'submitted': '1', 'ne_leptessen_ki': '1'}
     session_cookie = 'PHPSESSID'
     url = 'https://ncore.pro'
     name = 'nCore'
@@ -69,33 +77,83 @@ class ncore(object):
         'books': 'ebook_hun,ebook'
     }
 
+    def logged_in(self, query):
+
+        cookie = 'nyelv=hu; stilus=brutecore; nick=' + \
+            self.username + '; pass=' + self.passhash
+
+        # If we locally saved the passhash, load from there
+        if os.path.exists(self.cookie_path):
+            # print('File exists')
+            f = open(self.cookie_path, 'r')
+            cookie = f.read()
+            f.close()
+
+        # Init the cookie handler.
+        jar = CookieJar()
+        self.opener = build_opener(HTTPCookieProcessor(jar))
+        self.opener.addheaders = [
+            ('User-agent', 'Mozilla/5.0'), ('cookie', cookie)]
+
+        # Check if we signed in
+        url_cookie = self.opener.open(self.url+'/index.php')
+
+        # Check if we haven't been sent back to the login page
+        login_page = url_cookie.read().decode('utf-8')
+
+        # The login.php page has nCore as title, the index.php, or shop has a different one
+        if '<title>nCore</title>' in login_page:
+            return False
+        # We are in
+        return True
+
     def sign_in(self, query=''):
+
         # Check if we have set credentials
         if self.username == 'your_username' or self.password == 'your_password':
-            self.handle_error('You have not updated your credentials before installing the plugin', query)
+            self.handle_error(
+                'You have not updated your credentials before installing the plugin', query)
             return False
+
+        # Check if we signed in
+        if self.logged_in(query):
+            return True
 
         # Init the cookie handler.
         jar = CookieJar()
         self.opener = build_opener(HTTPCookieProcessor(jar))
         self.opener.addheaders = [('User-agent', 'Mozilla/5.0')]
-
         # Sign in.
-        url_cookie = self.opener.open(self.url + '/login.php', urlencode(self.login_data).encode('utf-8'))
+        url_cookie = self.opener.open(
+            self.url + '/login.php', urlencode(self.login_data).encode('utf-8'))
 
         # Verify cookies
         cookie_names = [cookie.name for cookie in jar]
 
         if self.session_cookie not in cookie_names:
-            self.handle_error('Could not log in. PHP session cookie missing', query)
+            self.handle_error(
+                'Could not log in. PHP session cookie missing', query)
             return False
 
         # Check if we haven't been sent back to the login page
         login_page = url_cookie.read().decode('utf-8')
-
         if 'login.php' in login_page:
-            self.handle_error('Could not log in. Your credentials are invalid! Please wait 5 minutes between attempts', query)
+            self.handle_error(
+                'Could not log in. Your credentials are invalid, check 2factor code! Please wait 5 minutes between attempts', query)
             return False
+
+        # Save the passhash and other cookies to a file
+        f = open(self.cookie_path, 'w')
+        valuable_cookie = [{cookie.name: cookie.value} for cookie in jar]
+        result_string = ""
+        for element in valuable_cookie:
+            for key, value in element.items():
+                if key in self.allowed_cookies:
+                    result_string += f"{key}={value}; "
+
+        result_string = result_string[:-2]  # remove the final "; "
+        f.write(result_string)
+        f.close()
 
         return True
 

@@ -14,6 +14,7 @@ It requires an active nCore account, which is only achievable through an invitat
 * Open the **ncore.py** file for editing using a text editor of your choice, such as Notepad++.
 * Look for the line containing **EDIT YOUR CREDENTIALS HERE**, usually on line 50.
 * Introduce your nCore username and password on the following two lines, respectively. Replace `your_username` and `your_password` with the correct values.
+* If you are using 2 factor authentication, you should replace `enter_code` with your code, and then quickly follow the next steps, before the code expires.
 * Open qBittorrent, enable the search engine using `Views > Search Engine`, then open the Search tab.
 * Press the `Search plugins...` button in the lower right corner, then finally press the `Install a new one` button.
 * Press the button labeled as `Local file` and choose the **ncore.py** plugin you've completed with your username and password.
