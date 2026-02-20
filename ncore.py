@@ -55,7 +55,7 @@ class ncore(object):
     passhash = 'should leave empty if dont know'
     twofactorcode = 'enter_code'
 
-    cookie_path = 'cookies.txt'
+    cookie_path = '/config/data/nova3/engines/cookies.txt'
     allowed_cookies = ['nick', 'pass', 'stilus', 'nyelv']
 
     MAX_PAGE_NUMBER = 10
