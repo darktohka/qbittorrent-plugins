@@ -55,7 +55,7 @@ class ncore(object):
     passhash = 'should leave empty if dont know'
     twofactorcode = 'enter_code'
 
-    cookie_path = 'cookies.txt'
+    cookie_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'cookies.txt')
     allowed_cookies = ['nick', 'pass', 'stilus', 'nyelv']
 
     MAX_PAGE_NUMBER = 10
